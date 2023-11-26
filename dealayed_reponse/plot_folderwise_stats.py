@@ -64,6 +64,8 @@ def save_figure(df, foldername, filenames):
 	plt.ylabel("Rate of Change")
 	plt.ylim(0, 0.05)
 	plt.tight_layout()
+	np.save(f"{foldername}_c1_t1_mean.npy", df['mean'])	
+	np.save(f"{foldername}_c1_t1_roc_mean.npy", df['rate_of_change_of_mean'])
 	plt.savefig(f"{foldername}_rate_of_change_mean+mean.png", dpi=600, bbox_inches="tight")
 
 	base_name = "Random Field"
@@ -85,7 +87,6 @@ def save_figure(df, foldername, filenames):
 
 	sns.kdeplot(data=new_df, fill=True)
 	plt.title("Kernel Density Estimation")
-	plt.ylim(-0.05, 1.05)
 	plt.tight_layout()
 	plt.savefig(f"{foldername}_kde_plot+mean.png", dpi=600, bbox_inches="tight")
 	plt.clf()
@@ -101,7 +102,6 @@ def save_figure(df, foldername, filenames):
 	plt.xticks(rotation=15)  # Change the angle as needed
 	# Show the plot
 	plt.tight_layout()
-	plt.ylim(-0.5, 1.5)
 	plt.savefig(f"{foldername}_vilion+median.png", dpi=600, bbox_inches="tight")
 	plt.clf()
 
