@@ -1,0 +1,147 @@
+#ifndef MY_INITIAL_CONDITION_H
+#define MY_INITIAL_CONDITION_H
+
+class InitialConditionAssembler : private AssemblyAssistant<DIM, double>
+{
+
+public:
+    InitialConditionAssembler() {}
+
+ void set_parameters(DataType x_location, DataType y_location, DataType variance, bool normed)
+ {
+      x_location_ = x_location;
+      y_location_ = y_location;
+      // mean_ = mean;
+      variance_ = variance;
+      normed_ = normed;
+ }
+
+    void operator()(const Element<double, DIM> &element,
+                    const Quadrature<double> &quadrature, LocalVector &lv)
+    {
+        AssemblyAssistant<DIM, double>::initialize_for_element(element, quadrature,
+                                                               false);
+
+        const int num_q = num_quadrature_points();
+        DataType mat_num_ = element.get_cell().get_material_number();
+
+        for (int q = 0; q < num_q; ++q)
+        {
+            const double wq = w(q);
+            const double dJ = std::abs(detJ(q));
+            const size_t num_dof = this->num_dofs_total();
+
+            for (int i = 0; i < num_dof; ++i)
+            {
+                for (int var = 0; var < 1; ++var)
+                {
+                    lv[i] +=
+                        wq * exp(-(x(q)[0] - x_location_) * (x(q)[0] - x_location_) / variance_ -
+                            (x(q)[1] - y_location_) * (x(q)[1] - y_location_) / variance_) *
+                        dJ;
+                }
+            } // var
+        }     // loop for q
+    }
+
+private:
+    DataType x_location_, y_location_;
+    DataType variance_; // mean_
+    bool normed_;
+};
+
+
+//class InitialConditionAssembler : private AssemblyAssistant<DIM, double>
+//{
+//
+//public:
+//    InitialConditionAssembler() {}
+//
+//   void set_parameters(DataType x_location, DataType y_location, DataType variance, bool normed)
+//   {
+//       x_location_ = x_location;
+//       y_location_ = y_location;
+//       // mean_ = mean;
+//       variance_ = variance;
+//       normed_ = normed;
+//   }
+//
+//    void operator()(const Element<double, DIM> &element,
+//                    const Quadrature<double> &quadrature, LocalVector &lv)
+//    {
+//        AssemblyAssistant<DIM, double>::initialize_for_element(element, quadrature,
+//                                                               false);
+//
+//        const int num_q = num_quadrature_points();
+//        DataType mat_num_ = element.get_cell().get_material_number();
+//        double r_init = 0.0009;
+//        for (int q = 0; q < num_q; ++q)
+//        {
+//            const double wq = w(q);
+//            const double dJ = std::abs(detJ(q));
+//            const size_t num_dof = this->num_dofs_total();
+//
+//            for (int i = 0; i < num_dof; ++i)
+//            {
+//                for (int var = 0; var < 1; ++var)
+//                {
+//                    // sin  if ((std::sin(7.2 * (x(q)[0]  - x_location_) + 5.6 * (x(q)[1] - y_location_) + 1) * std::pow(4 * (x(q)[0]  - x_location_) - 0.2, 2) + (std::sin(8 * (x(q)[0]  - x_location_)) + 1) * std::pow(64 * (x(q)[1] - y_location_), 2)) <= 0.09) {
+//                    // ellipse if (((x(q)[0] - x_location_)*(x(q)[0] - x_location_)) + ((x(q)[1] - y_location_) * (x(q)[1] - y_location_)) <= r_init) {
+//                    //     lv[i] += wq * 1.0 * dJ;
+//                    // }else{
+//                    //     lv[i] += wq * 0 * dJ;
+//                    // }
+//                   double haversine_value = haversine_step(a, x_q0_val, center_x, x_q1_val, center_y, r, transition_width);
+//                   lv[i] += wq * haversine_value * dJ;
+//
+//                }
+//            } // var
+//        }     // loop for q
+//    }
+//
+//private:
+//   DataType x_location_, y_location_;
+//   DataType variance_; // mean_
+//   bool normed_;
+//};
+
+
+
+
+class MassMatrixAssemblerRD : private AssemblyAssistant<DIM, double>
+{
+
+public:
+    MassMatrixAssemblerRD() {}
+
+    void operator()(const Element<double, DIM> &element,
+                    const Quadrature<double> &quadrature, LocalMatrix &lm)
+    {
+        AssemblyAssistant<DIM, double>::initialize_for_element(element, quadrature,
+                                                               false);
+
+        const int num_q = num_quadrature_points();
+
+        for (int q = 0; q < num_q; ++q)
+        {
+            const double wq = w(q);
+            const double dJ = std::abs(detJ(q));
+
+            for (int var = 0; var < 1; ++var)
+            {
+                const int n_dofs = num_dofs(var);
+                for (int i = 0; i < n_dofs; ++i)
+                {
+                    for (int j = 0; j < n_dofs; ++j)
+                    {
+                        lm(dof_index(i, var), dof_index(j, var)) +=
+                            wq * phi(i, q, var) * phi(j, q, var) * dJ;
+                    }
+                }
+            }
+        } // loop for q
+    }
+};
+
+
+#endif

@@ -1,0 +1,75 @@
+<Param>
+  <Mesh>
+    <Filename2>crypt0.inp</Filename2>
+    <!-- <Filename3>unit_cube.inp</Filename3> -->
+    <InitialRefLevel>1</InitialRefLevel>
+    <FinalRefLevel>0</FinalRefLevel>
+    <OutputPath>~/Downloads/</OutputPath>
+  </Mesh>
+  <FESpace>
+    <FeDegree>1</FeDegree>
+  </FESpace>
+  <Parameters>
+    <!-- for material 1  (out)-->
+    <diffusion_1>1e-7</diffusion_1>
+    <carrying_capacity_1>1e-4</carrying_capacity_1>    
+    <!-- <diffusion_1>4.7e-7</diffusion_1>
+    <carrying_capacity_1>5.2e-4</carrying_capacity_1> -->
+
+    <!-- for material 2  (epi)-->
+    <diffusion_2>1e-4</diffusion_2>
+    <carrying_capacity_2>1e-1</carrying_capacity_2>
+    <!-- <diffusion_2>3.7e-4</diffusion_2>
+    <carrying_capacity_2>5.5e-1</carrying_capacity_2> -->    
+    
+    <!-- for material 3 (tissue)-->
+    <diffusion_3>1e-5</diffusion_3>
+    <growth_rate_3>1e-2</growth_rate_3>
+    <!-- <diffusion_3>3.7e-5</diffusion_3>
+    <growth_rate_3>6.7e-2</growth_rate_3> -->
+
+  </Parameters>
+  <Timestepping>
+        <total_time>100</total_time>
+        <step_size>0.01</step_size>
+	      <VisualizationFrequency>100</VisualizationFrequency>
+  </Timestepping>
+  <InitialCondition>
+    <x_location>0.4</x_location>
+    <y_location>0.4</y_location>
+    <Variance>0.0005</Variance>
+    <Normed>0</Normed>
+  </InitialCondition>
+  <NonlinearSolver>
+    <Theta>0.5</Theta>
+    <MaximumIterations>30</MaximumIterations>
+    <AbsoluteTolerance>1.e-10</AbsoluteTolerance>
+    <RelativeTolerance>1.e-8</RelativeTolerance>
+    <DivergenceLimit>1.e6</DivergenceLimit>
+    <MaxArmijoIteration>0</MaxArmijoIteration>
+    <ForcingStrategy>EisenstatWalker1</ForcingStrategy>
+    <ConstantForcingTerm>1.e-4</ConstantForcingTerm>
+    <InitialValueForcingTerm>1.e-3</InitialValueForcingTerm>
+    <MaxValueForcingTerm>0.9</MaxValueForcingTerm>
+    <GammaParameterEW2>0.9</GammaParameterEW2>
+    <AlphaParameterEW2>2</AlphaParameterEW2>
+  </NonlinearSolver>
+  <LinearSolver>
+    <Name>GMRES</Name>
+    <SizeBasis>100</SizeBasis>
+    <Method>RightPreconditioning</Method>
+    <MaxIterations>1000</MaxIterations>
+    <AbsTolerance>1.0e-15</AbsTolerance>
+    <RelTolerance>1.0e-10</RelTolerance>
+    <DivTolerance>1.0e6</DivTolerance>
+  </LinearSolver>
+  <Equation>
+    <a>-1.8e-2</a>
+    <b>-1.7e-2</b>
+    <Kappa>100.</Kappa>
+    <InitialKappa>1</InitialKappa>
+    <NumberContinuationSteps>10</NumberContinuationSteps>
+    <NeumannBC>1.</NeumannBC>
+    <DirichletMaterialNumber>14</DirichletMaterialNumber>
+  </Equation>
+</Param>

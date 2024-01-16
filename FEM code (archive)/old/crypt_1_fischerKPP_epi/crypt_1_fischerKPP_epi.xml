@@ -1,0 +1,67 @@
+<Param>
+  <Mesh>
+    <Filename2>crypt0.inp</Filename2>
+    
+    <!-- <Filename3>unit_cube.inp</Filename3> -->
+    <InitialRefLevel>1</InitialRefLevel>
+    <FinalRefLevel>0</FinalRefLevel>
+    <OutputPath>~/Downloads/</OutputPath>
+  </Mesh>
+  <FESpace>
+    <FeDegree>1</FeDegree>
+  </FESpace>
+  <Parameters>
+    <!-- for material 1  (out)-->
+    <diffusion_1>0.000037</diffusion_1>
+    <carrying_capacity_1>4.8e-2</carrying_capacity_1>
+    <!-- for material 2  (epi)-->
+    <diffusion_2>0.000047</diffusion_2>
+    <carrying_capacity_2>2.8e-2</carrying_capacity_2>
+    <!-- for material 3 (tissue)-->
+    <diffusion_3>0.00002</diffusion_3>
+    <growth_rate_3>2.8e-2</growth_rate_3>
+  </Parameters>
+  <Timestepping>
+        <total_time>100</total_time>
+        <step_size>0.1</step_size>
+	      <VisualizationFrequency>1</VisualizationFrequency>
+  </Timestepping>
+  <InitialCondition>
+    <x_location>0.4</x_location>
+    <y_location>0.4</y_location>
+    <Variance>0.005</Variance>
+    <Normed>0</Normed>
+  </InitialCondition>
+  <NonlinearSolver>
+    <Theta>0.5</Theta>
+    <MaximumIterations>30</MaximumIterations>
+    <AbsoluteTolerance>1.e-10</AbsoluteTolerance>
+    <RelativeTolerance>1.e-8</RelativeTolerance>
+    <DivergenceLimit>1.e6</DivergenceLimit>
+    <MaxArmijoIteration>0</MaxArmijoIteration>
+    <ForcingStrategy>EisenstatWalker1</ForcingStrategy>
+    <ConstantForcingTerm>1.e-4</ConstantForcingTerm>
+    <InitialValueForcingTerm>1.e-3</InitialValueForcingTerm>
+    <MaxValueForcingTerm>0.9</MaxValueForcingTerm>
+    <GammaParameterEW2>0.9</GammaParameterEW2>
+    <AlphaParameterEW2>2</AlphaParameterEW2>
+  </NonlinearSolver>
+  <LinearSolver>
+    <Name>GMRES</Name>
+    <SizeBasis>100</SizeBasis>
+    <Method>RightPreconditioning</Method>
+    <MaxIterations>1000</MaxIterations>
+    <AbsTolerance>1.0e-15</AbsTolerance>
+    <RelTolerance>1.0e-10</RelTolerance>
+    <DivTolerance>1.0e6</DivTolerance>
+  </LinearSolver>
+  <Equation>
+    <a>-1.8e-2</a>
+    <b>-1.7e-2</b>
+    <Kappa>100.</Kappa>
+    <InitialKappa>1</InitialKappa>
+    <NumberContinuationSteps>10</NumberContinuationSteps>
+    <NeumannBC>1.</NeumannBC>
+    <DirichletMaterialNumber>14</DirichletMaterialNumber>
+  </Equation>
+</Param>
